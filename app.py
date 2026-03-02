@@ -24,20 +24,24 @@ RISK_HIGH_THRESHOLD_PERCENT = 75 # Corresponds to 0.75 * 100 or custom
 @st.cache_resource
 def load_model_components():
     try:
-        # Assuming model components are in the same directory as the app.py
         with open('xgb_model.pkl', 'rb') as f:
             xgb_model = pickle.load(f)
+
         with open('scaler.pkl', 'rb') as f:
             scaler = pickle.load(f)
+
         with open('feature_columns.pkl', 'rb') as f:
             feature_columns = pickle.load(f)
+
         return xgb_model, scaler, feature_columns
-    except FileNotFoundError:
-        return None, None # Return None values on error
-    except EOFError:
-        return None, None, None # Return None values on error
+
+    except FileNotFoundError as e:
+        st.error(f"Model file not found: {e}")
+        st.stop()
+
     except Exception as e:
-        return None, None # Return None values on error
+        st.error(f"Error loading model components: {e}")
+        st.stop()
 
 # --- Data Loading and Preprocessing (using loaded scaler and feature columns) --- #
 @st.cache_data
@@ -293,6 +297,7 @@ def streamlit_app():
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
