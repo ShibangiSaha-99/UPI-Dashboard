@@ -44,7 +44,6 @@ def load_model_components():
         st.stop()
 
 # --- Data Loading and Preprocessing (using loaded scaler and feature columns) --- #
-@st.cache_data
 def load_and_preprocess_data(scaler, feature_columns):
     try:
         upi_df = pd.read_csv(FILE_PATH)
@@ -90,7 +89,6 @@ def load_and_preprocess_data(scaler, feature_columns):
 
     return X_full_processed, y_full
 # --- XGBoost Model Evaluation --- #
-@st.cache_data
 def evaluate_xgb_model(_model, X_data, y_data, initial_optimal_threshold, current_threshold=None):
     y_pred_proba_xgb = _model.predict_proba(X_data)[:, 1]
 
@@ -297,6 +295,7 @@ def streamlit_app():
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
