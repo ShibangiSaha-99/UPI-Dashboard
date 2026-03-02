@@ -42,17 +42,16 @@ def load_model_components():
 # --- Data Loading and Preprocessing (using loaded scaler and feature columns) --- #
 @st.cache_data
 def load_and_preprocess_data(scaler, feature_columns):
-    # Load the original UPI dataset
     try:
         upi_df = pd.read_csv(FILE_PATH)
     except FileNotFoundError:
-    st.error(f"File not found: {FILE_PATH}")
-    st.stop() # Explicitly return None on error
+        st.error(f"File not found: {FILE_PATH}")
+        st.stop()
     except Exception as e:
-    st.error(f"Error loading dataset: {e}")
-    st.stop() # Explicitly return None on error
+        st.error(f"Error loading dataset: {e}")
+        st.stop()
 
-    # Drop ID-like columns (uniqueness > 95%)
+    # Drop ID-like columns
     columns_to_drop = []
     for col in upi_df.columns:
         unique_values_count = upi_df[col].nunique()
@@ -60,34 +59,32 @@ def load_and_preprocess_data(scaler, feature_columns):
         uniqueness_percentage = (unique_values_count / total_rows) * 100
         if uniqueness_percentage > 95:
             columns_to_drop.append(col)
+
     if columns_to_drop:
         upi_df.drop(columns=columns_to_drop, inplace=True)
 
-    # One-hot encode categorical variables
     categorical_cols = upi_df.select_dtypes(include=['object']).columns
     if len(categorical_cols) > 0:
         upi_df = pd.get_dummies(upi_df, columns=categorical_cols, drop_first=True)
 
-    # Separate features (X) and target variable (y)
     X_full = upi_df.drop('fraud', axis=1)
     y_full = upi_df['fraud']
 
-    # Align columns of X_full with the feature_columns used during training
-    # Add missing columns with 0
     missing_cols = set(feature_columns) - set(X_full.columns)
     for c in missing_cols:
         X_full[c] = 0
-    # Drop columns not in feature_columns and ensure order
-    X_full = X_full[feature_columns] # Ensure the order of feature columns is the same
 
-    # Scale features using the loaded StandardScaler
+    X_full = X_full[feature_columns]
+
     X_full_scaled = scaler.transform(X_full)
 
-    # Convert scaled arrays back to DataFrames, preserving column names
-    X_full_processed = pd.DataFrame(X_full_scaled, columns=feature_columns, index=X_full.index)
+    X_full_processed = pd.DataFrame(
+        X_full_scaled,
+        columns=feature_columns,
+        index=X_full.index
+    )
 
     return X_full_processed, y_full
-
 # --- XGBoost Model Evaluation --- #
 @st.cache_data
 def evaluate_xgb_model(_model, X_data, y_data, initial_optimal_threshold, current_threshold=None):
@@ -296,6 +293,7 @@ def streamlit_app():
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
