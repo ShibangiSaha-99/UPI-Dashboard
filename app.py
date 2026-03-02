@@ -33,13 +33,11 @@ def load_model_components():
             feature_columns = pickle.load(f)
         return xgb_model, scaler, feature_columns
     except FileNotFoundError:
-    st.error(f"File not found: {FILE_PATH}")
-    st.stop()  # Return None values on error
+        return None, None # Return None values on error
     except EOFError:
         return None, None, None # Return None values on error
     except Exception as e:
-    st.error(f"Error loading dataset: {e}")
-    st.stop() # Return None values on error
+        return None, None # Return None values on error
 
 # --- Data Loading and Preprocessing (using loaded scaler and feature columns) --- #
 @st.cache_data
@@ -48,9 +46,11 @@ def load_and_preprocess_data(scaler, feature_columns):
     try:
         upi_df = pd.read_csv(FILE_PATH)
     except FileNotFoundError:
-        return None, None # Explicitly return None on error
+    st.error(f"File not found: {FILE_PATH}")
+    st.stop() # Explicitly return None on error
     except Exception as e:
-        return None, None # Explicitly return None on error
+    st.error(f"Error loading dataset: {e}")
+    st.stop() # Explicitly return None on error
 
     # Drop ID-like columns (uniqueness > 95%)
     columns_to_drop = []
@@ -296,6 +296,7 @@ def streamlit_app():
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
