@@ -297,6 +297,13 @@ if __name__ == '__main__':
     streamlit_app()
 
 
+git add runtime.txt
+git commit -m "Force Python 3.11"
+git push
+
+
+
+
 
 
 
