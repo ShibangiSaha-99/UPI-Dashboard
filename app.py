@@ -6,7 +6,6 @@ import pickle # Needed for loading pre-trained models
 # from tensorflow.keras.models import Sequential
 # from tensorflow.keras.layers import Dense, Dropout, Input
 # from tensorflow.keras.callbacks import EarlyStopping
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix, roc_curve
 import xgboost as xgb
@@ -295,3 +294,4 @@ def streamlit_app():
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
