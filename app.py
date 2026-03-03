@@ -140,21 +140,22 @@ def streamlit_app():
         # load_model_components already displayed an error message if loading failed.
         st.stop() # Stop the app if model components failed to load
 
+    
+    
     # --- Data Loading and Preprocessing --- #
-    # --- Data Loading and Preprocessing --- #
-st.subheader("1. Data Loading and Preprocessing")
-st.info("Loading and preprocessing data... This may take a moment.")
-
-# Call the function using loaded components
-X_full_processed_st, y_full_st = load_and_preprocess_data(scaler_loaded, feature_columns_loaded)
-
-# Explicitly check for None returns in case of internal error
-if X_full_processed_st is None or y_full_st is None:
-    st.stop()  # Stop the app if data loading/preprocessing failed
-
-st.success("Data loaded and preprocessed successfully!")
-st.write(f"Shape of processed X_full: {X_full_processed_st.shape}")
-
+    st.subheader("1. Data Loading and Preprocessing")
+    st.info("Loading and preprocessing data... This may take a moment.")
+    
+    # Call the function using loaded components
+    X_full_processed_st, y_full_st = load_and_preprocess_data(scaler_loaded, feature_columns_loaded)
+    
+    # Check if preprocessing failed
+    if X_full_processed_st is None or y_full_st is None:
+        st.stop()  # Stop the app if data loading/preprocessing failed
+    
+    st.success("Data loaded and preprocessed successfully!")
+    st.write(f"Shape of processed X_full: {X_full_processed_st.shape}")
+    
     # Explicitly check for None returns from load_and_preprocess_data in case of internal error
     if X_full_processed_st is None or y_full_st is None:
         # load_and_preprocess_data already displayed an error message if loading failed.
@@ -308,6 +309,7 @@ st.write(f"Shape of processed X_full: {X_full_processed_st.shape}")
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
