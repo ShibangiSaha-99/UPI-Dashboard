@@ -23,9 +23,11 @@ RISK_HIGH_THRESHOLD_PERCENT = 75 # Corresponds to 0.75 * 100 or custom
 import os
 import streamlit as st
 
-st.write("Current files in directory:")
-st.write(os.listdir())
+def streamlit_app():
+    st.title("UPI Fraud Detection Dashboard")
 
+    st.write("Current files in directory:")
+    st.write(os.listdir())
 # --- Model Component Loading --- #
 import joblib
 import streamlit as st
@@ -41,8 +43,6 @@ def load_model_components():
         st.error(f"Error loading model components: {e}")
         return None, None, None   
 
-if model is None:
-    st.stop()
 
 # --- Data Loading and Preprocessing (using loaded scaler and feature columns) --- #
 def load_and_preprocess_data(scaler, feature_columns):
@@ -119,8 +119,7 @@ def streamlit_app():
     st.title("UPI Fraud Detection Dashboard")
     st.write("A comprehensive dashboard for fraud detection using XGBoost model, "
              "and a simple risk scoring system.")
-    model, scaler, feature_columns = load_model_components()
-
+    
 
 
     # Initialize session state variables if they don't exist
@@ -144,7 +143,8 @@ def streamlit_app():
     # --- Data Loading and Preprocessing --- #
     st.subheader("1. Data Loading and Preprocessing")
     st.info("Loading and preprocessing data... This may take a moment.")
-    X_full_processed_st, y_full_st = load_and_preprocess_data(scaler_loaded, feature_columns_loaded)
+    @st.cache_data
+    def load_and_preprocess_data(...):(scaler_loaded, feature_columns_loaded)
 
     # Explicitly check for None returns from load_and_preprocess_data in case of internal error
     if X_full_processed_st is None or y_full_st is None:
@@ -299,6 +299,7 @@ def streamlit_app():
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
