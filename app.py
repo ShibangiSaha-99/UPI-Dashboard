@@ -27,27 +27,19 @@ st.write("Current files in directory:")
 st.write(os.listdir())
 
 # --- Model Component Loading --- #
+import joblib
+import streamlit as st
+
 @st.cache_resource
 def load_model_components():
     try:
-        with open('xgb_model.pkl', 'rb') as f:
-            xgb_model = pickle.load(f)
-
-        with open('scaler.pkl', 'rb') as f:
-            scaler = pickle.load(f)
-
-        with open('feature_columns.pkl', 'rb') as f:
-            feature_columns = pickle.load(f)
-
-        return xgb_model, scaler, feature_columns
-
-    except FileNotFoundError as e:
-        st.error(f"Model file not found: {e}")
-        st.stop()
-
+        model = joblib.load("xgb_model.pkl")
+        scaler = joblib.load("scaler.pkl")
+        feature_columns = joblib.load("feature_columns.pkl")
+        return model, scaler, feature_columns
     except Exception as e:
         st.error(f"Error loading model components: {e}")
-        st.stop()
+        return None, None, None    
 
 # --- Data Loading and Preprocessing (using loaded scaler and feature columns) --- #
 def load_and_preprocess_data(scaler, feature_columns):
@@ -124,6 +116,10 @@ def streamlit_app():
     st.title("UPI Fraud Detection Dashboard")
     st.write("A comprehensive dashboard for fraud detection using XGBoost model, "
              "and a simple risk scoring system.")
+    model, scaler, feature_columns = load_model_components()
+
+if model is None:
+    st.stop()
 
     # Initialize session state variables if they don't exist
     if 'y_pred_proba_xgb_st' not in st.session_state:
@@ -301,6 +297,7 @@ def streamlit_app():
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
