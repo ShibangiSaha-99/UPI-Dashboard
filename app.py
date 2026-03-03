@@ -144,7 +144,7 @@ def streamlit_app():
     st.subheader("1. Data Loading and Preprocessing")
     st.info("Loading and preprocessing data... This may take a moment.")
     @st.cache_data
-    def load_and_preprocess_data:(scaler_loaded, feature_columns_loaded)
+    def load_and_preprocess_data(scaler_loaded, feature_columns_loaded):
 
     # Explicitly check for None returns from load_and_preprocess_data in case of internal error
     if X_full_processed_st is None or y_full_st is None:
@@ -299,6 +299,7 @@ def streamlit_app():
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
