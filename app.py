@@ -20,6 +20,12 @@ XGB_OPTIMAL_THRESHOLD = 0.25 # From previous analysis
 RISK_MEDIUM_THRESHOLD_PERCENT = 22 # Corresponds to XGB_OPTIMAL_THRESHOLD * 100 or custom
 RISK_HIGH_THRESHOLD_PERCENT = 75 # Corresponds to 0.75 * 100 or custom
 
+import os
+import streamlit as st
+
+st.write("Current files in directory:")
+st.write(os.listdir())
+
 # --- Model Component Loading --- #
 @st.cache_resource
 def load_model_components():
@@ -295,6 +301,7 @@ def streamlit_app():
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
