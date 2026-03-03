@@ -39,7 +39,10 @@ def load_model_components():
         return model, scaler, feature_columns
     except Exception as e:
         st.error(f"Error loading model components: {e}")
-        return None, None, None    
+        return None, None, None   
+
+if model is None:
+    st.stop()
 
 # --- Data Loading and Preprocessing (using loaded scaler and feature columns) --- #
 def load_and_preprocess_data(scaler, feature_columns):
@@ -118,8 +121,7 @@ def streamlit_app():
              "and a simple risk scoring system.")
     model, scaler, feature_columns = load_model_components()
 
-if model is None:
-    st.stop()
+
 
     # Initialize session state variables if they don't exist
     if 'y_pred_proba_xgb_st' not in st.session_state:
@@ -297,6 +299,7 @@ if model is None:
 # Run the Streamlit app
 if __name__ == '__main__':
     streamlit_app()
+
 
 
 
